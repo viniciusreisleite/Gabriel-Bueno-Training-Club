@@ -30,11 +30,7 @@ jobs:
           sudo apt-get update && sudo apt-get install -y ffmpeg
           pip install playwright yt-dlp
           playwright install chromium --with-deps
-          
-          # Nosso passo de teste entra aqui:
-      - name: Teste de Acesso Publico yt-dlp 🧪
-        run: |
-          yt-dlp --flat-playlist --playlist-end 3 --print "%(id)s - %(title)s" "https://www.instagram.com/studiofit.gb/"
+              
 
       - name: Baixar os 8 vídeos e limpar arquivos antigos
         env:
