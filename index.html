@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -154,7 +154,7 @@
   <div class="tv-container">
     <!-- Coluna de Mídia -->
     <div class="video-section">
-      <video id="player" autoplay playsinline muted loop preload="auto"></video>
+      <img id="image-player" style="display:none; width:100%; height:100%; object-fit:contain; background-color:#050505;" /><video id="player" autoplay playsinline muted loop preload="auto"></video>
       <img id="image-display" alt="Publicação" style="display: none;" onerror="this.style.display='none'">
       <div class="progress-bar-container">
         <div class="progress-bar" id="progress"></div>
@@ -180,130 +180,79 @@
   </div>
 
   <script>
-    const player = document.getElementById('player');
-    const imageDisplay = document.getElementById('image-display');
-    const progressBar = document.getElementById('progress');
-    const captionContainer = document.getElementById('caption-container');
-    const captionText = document.getElementById('caption-text');
+    function ajustarFonteTexto(container, elemento) {
+      let fontSize = window.innerHeight * 0.024;
+      const minFontSize = window.innerHeight * 0.013;
+      elemento.style.fontSize = `${fontSize}px`;
+      elemento.style.lineHeight = '1.45';
 
-    // Mudo obrigatório para autoplay em Smart TVs
-    player.muted = true;
-    player.defaultMuted = true;
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const postId = parseInt(urlParams.get('post')) || 1;
-
-    let consecutiveErrors = 0;
-    const maxConsecutiveErrors = 5;
-
-    function autoFitTextExact() {
-      const containerW = captionContainer.clientWidth;
-      const containerH = captionContainer.clientHeight;
-      
-      if (!containerW || !containerH) return;
-
-      let low = 12;
-      let high = 65;
-      let optimal = low;
-
-      for (let i = 0; i < 10; i++) {
-        const mid = (low + high) / 2;
-        captionText.style.fontSize = mid + 'px';
-        captionText.style.lineHeight = (mid * 1.38) + 'px';
-
-        const overflowH = captionText.scrollHeight > containerH;
-        const overflowW = captionText.scrollWidth > containerW;
-
-        if (!overflowH && !overflowW) {
-          optimal = mid;
-          low = mid;
-        } else {
-          high = mid;
-        }
+      while (elemento.scrollHeight > container.clientHeight && fontSize > minFontSize) {
+        fontSize -= 0.5;
+        elemento.style.fontSize = `${fontSize}px`;
       }
 
-      captionText.style.fontSize = optimal + 'px';
-      captionText.style.lineHeight = (optimal * 1.38) + 'px';
-    }
-
-    function safePlay() {
-      const playPromise = player.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(() => {
-          player.muted = true;
-          player.play().catch(() => {});
-        });
+      if (elemento.scrollHeight > container.clientHeight) {
+        elemento.style.lineHeight = '1.3';
       }
     }
 
-    player.addEventListener('error', () => {
-      consecutiveErrors++;
-      if (consecutiveErrors >= maxConsecutiveErrors) {
-        setTimeout(() => {
-          window.location.reload();
-        }, 3000);
-      } else {
-        setTimeout(() => {
-          player.load();
-          safePlay();
-        }, 2000);
-      }
-    });
+    document.addEventListener('DOMContentLoaded', async () => {
+      const timestamp = Date.now();
+      const containerElem = document.getElementById('caption-container') || document.querySelector('.caption-container');
+      const captionElem = document.getElementById('caption-text') || document.querySelector('.caption-text');
+      const player = document.getElementById('player');
+      const videoSource = document.getElementById('video-source');
+      const imagePlayer = document.getElementById('image-player');
 
-    player.addEventListener('playing', () => {
-      consecutiveErrors = 0;
-    });
-
-    player.addEventListener('timeupdate', () => {
-      if (player.duration) {
-        const pct = (player.currentTime / player.duration) * 100;
-        progressBar.style.width = pct + '%';
-      }
-    });
-
-    player.addEventListener('ended', () => {
-      player.currentTime = 0;
-      safePlay();
-    });
-
-    async function loadPostData() {
-      const timestamp = new Date().getTime();
       try {
-        const res = await fetch(`data.json?t=${timestamp}`, { cache: 'no-store' });
-        const posts = await res.json();
-        
-        const currentPost = posts.find(p => p.id === postId) || posts[0];
-        if (!currentPost) return;
-        
-        captionText.innerText = currentPost.caption || 'Studio Fit GB';
-        requestAnimationFrame(autoFitTextExact);
+        const response = await fetch(`data.json?t=${timestamp}`);
+        const posts = await response.json();
+        if (!Array.isArray(posts) || posts.length === 0) return;
 
-        // Suporta tanto media_file quanto video_file
-        const mediaFile = currentPost.media_file || currentPost.video_file || `media_${postId}.mp4`;
-        const isVideo = currentPost.type === 'video' || mediaFile.endsWith('.mp4');
+        const urlParams = new URLSearchParams(window.location.search);
+        const postParam = urlParams.get('post');
+        const postIdx = parseInt(postParam, 10);
 
-        if (isVideo) {
-          imageDisplay.style.display = 'none';
-          player.style.display = 'block';
-          player.src = `${mediaFile}?t=${timestamp}`;
-          player.load();
-          safePlay();
-        } else {
-          player.pause();
-          player.removeAttribute('src');
-          player.style.display = 'none';
-          imageDisplay.style.display = 'block';
-          imageDisplay.src = `${mediaFile}?t=${timestamp}`;
-          progressBar.style.width = '100%';
+        let currentPost = posts[0];
+        if (!isNaN(postIdx)) {
+          currentPost = posts.find(p => p.id === postIdx || String(p.id) === String(postIdx)) || posts[postIdx - 1] || posts[0];
         }
-      } catch (e) {
-        console.log('Erro ao carregar dados:', e);
+
+        let texto = currentPost.caption || currentPost.text || '';
+        texto = texto.replace(/\n{3,}/g, '\n\n').trim();
+        if (captionElem) {
+          captionElem.textContent = texto;
+          if (containerElem) {
+            ajustarFonteTexto(containerElem, captionElem);
+            window.addEventListener('resize', () => ajustarFonteTexto(containerElem, captionElem));
+          }
+        }
+
+        const midiaArquivo = currentPost.media || currentPost.media_file || currentPost.video_file;
+        const isFoto = currentPost.type === 'image' || (midiaArquivo && (midiaArquivo.endsWith('.jpg') || midiaArquivo.endsWith('.png')));
+
+        if (isFoto) {
+          if (player) {
+            player.pause();
+            player.style.display = 'none';
+          }
+          if (imagePlayer) {
+            imagePlayer.style.display = 'block';
+            imagePlayer.src = `${midiaArquivo}?t=${timestamp}`;
+          }
+        } else {
+          if (imagePlayer) imagePlayer.style.display = 'none';
+          if (player && videoSource) {
+            player.style.display = 'block';
+            videoSource.src = `${midiaArquivo}?t=${timestamp}`;
+            player.load();
+            player.play().catch(e => console.log('Autoplay:', e));
+          }
+        }
+      } catch (err) {
+        console.error(err);
       }
-    }
-
-    window.addEventListener('resize', autoFitTextExact);
-
-    loadPostData();
+    });
   </script>
 </body>
 </html>
