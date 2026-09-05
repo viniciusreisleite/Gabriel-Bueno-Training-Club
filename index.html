@@ -3,303 +3,246 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
-  <title>Mural Digital - Gabriel Bueno Training Club</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <title>Mural - Gabriel Bueno Training Club</title>
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
-    body {
-      background-color: #f8fafc;
-      color: #0f172a;
-      font-family: 'Montserrat', sans-serif;
-      width: 100vw;
-      height: 100vh;
+    body, html {
+      width: 100%;
+      height: 100%;
       overflow: hidden;
-      display: flex;
+      background-color: #0b0b0b;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
     .tv-container {
       display: flex;
-      width: 100%;
-      height: 100%;
-      padding: 3vh 2.5vw;
-      gap: 2.5vw;
+      width: 100vw;
+      height: 100vh;
+      background-color: #fff;
     }
-
-    /* Coluna de Mídia */
+    /* Coluna de Video / Midia */
     .video-section {
-      flex: 0 0 35%;
-      height: 100%;
-      background: #000000;
-      border-radius: 26px;
-      overflow: hidden;
-      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      flex: 0 0 38%;
+      height: 100vh;
+      background: #000 !important;
       position: relative;
-      border: 3px solid #ffffff;
+      overflow: hidden;
     }
-    #player, #image-display {
+    video, #image-player {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      background: #000 !important;
+      background-color: #000 !important;
       display: block;
     }
-    .progress-bar-container {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 8px;
-      background: rgba(0, 0, 0, 0.25);
-      z-index: 10;
+    /* Coluna de Informacoes */
+    .info-section {
+      flex: 1;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 3rem;
+      background-color: #ffffff;
+      color: #111;
+      overflow: hidden;
+      position: relative;
     }
-    .progress-bar {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #eab308, #facc15);
-      transition: width 0.1s linear;
-    }
-
-    /* Coluna Informativa (Fundo Branco Clean) */
-    
-
-    /* Cabeçalho */
     .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 25px;
-      padding-bottom: 2vh;
-      border-bottom: 2px solid #f1f5f9;
+      border-bottom: 2px solid #eee;
+      padding-bottom: 1.5rem;
+      flex-shrink: 0;
     }
-    .header-text {
-      flex: 1;
-    }
-    
-    .badge {
+    .header-text .badge {
       display: inline-block;
-      background: #09090b;
-      color: #facc15;
-      font-size: clamp(0.75rem, 1vw, 1.05rem);
+      padding: 0.35rem 1rem;
+      font-size: 1rem;
       font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      padding: 7px 20px;
       border-radius: 50px;
-      margin-bottom: 1.2vh;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
-    }
-
-    .header h1 {
-      font-size: clamp(1.4rem, 2.2vw, 2.6rem);
-      font-weight: 900;
-      line-height: 1.2;
-      color: #09090b;
-      letter-spacing: -0.5px;
       text-transform: uppercase;
+      letter-spacing: 1px;
+      background: #dc2626;
+      color: #fff;
+      margin-bottom: 0.5rem;
     }
-    .header h1 span {
-      color: #ca8a04;
+    .header-text h1 {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: #111;
+      line-height: 1.1;
     }
-
+    .header-text h1 span {
+      color: #dc2626;
+    }
     .logo-img {
-      height: clamp(85px, 14vh, 140px);
-      max-width: 260px;
+      max-height: 90px;
+      max-width: 180px;
       object-fit: contain;
-      filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.08));
     }
-
-    /* Área de Texto Auto-Ajustável */
-    
-    
-      
-    
-      .info-section {
-      display: flex;
-      flex-direction: column;
-      height: 100vh !important;
-      max-height: 100vh !important;
-      overflow: hidden !important;
-      box-sizing: border-box;
-      padding-bottom: 2rem;
-    }
+    /* Area de Legenda com Scroll Oculto */
     .caption-container {
-      flex: 1 1 auto !important;
-      height: 0 !important;
-      overflow-y: scroll !important;
-      scrollbar-width: none !important; /* Firefox */
-      -ms-overflow-style: none !important; /* IE/Edge */
-      margin-top: 1.5rem !important;
+      flex: 1;
+      margin-top: 2rem;
+      overflow-y: scroll;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
       position: relative;
     }
     .caption-container::-webkit-scrollbar {
-      display: none !important; /* Chrome / Smart TV */
+      display: none;
     }
     .caption-box {
-      font-size: 2.3vw !important;
-      line-height: 1.5 !important;
-      font-weight: 600 !important;
-      color: #222 !important;
+      font-size: 2.2vw;
+      line-height: 1.45;
+      font-weight: 600;
+      color: #222;
       word-wrap: break-word;
-      padding-bottom: 4rem;
+      white-space: pre-line;
+      padding-bottom: 6rem;
     }
   </style>
 </head>
 <body>
 
   <div class="tv-container">
-    <!-- Coluna de Mídia -->
     <div class="video-section">
-      <img id="image-player" style="display:none; width:100%; height:100%; object-fit:contain; background-color:#050505;" /><video id="player" autoplay playsinline muted loop preload="auto" style="width:100%; height:100%; object-fit:contain; background-color:#050505;"><source id="video-source" src="" type="video/mp4"></video>
-      <img id="image-display" alt="Publicação" style="display: none;" onerror="this.style.display='none'">
-      <div class="progress-bar-container">
-        <div class="progress-bar" id="progress"></div>
-      </div>
+      <img id="image-player" style="display:none;" />
+      <video id="player" autoplay playsinline muted loop preload="auto">
+        <source id="video-source" src="" type="video/mp4">
+      </video>
     </div>
 
-    <!-- Coluna Informativa -->
     <div class="info-section">
       <div class="header">
         <div class="header-text">
-          <span class="badge">Hyrox Training Club</span>
+          <span class="badge">Experiência Premium</span>
           <h1>Gabriel Bueno <span>Studio Fit</span></h1>
         </div>
-        <img src="logo.png" alt="Logo Studio Fit Gabriel Bueno" class="logo-img" onerror="this.style.display='none'">
+        <img src="logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
       </div>
 
       <div class="caption-container" id="caption-container">
         <div class="caption-box" id="caption-text">
-          Carregando informações e novidades...
+          A carregar informações...
         </div>
       </div>
     </div>
   </div>
 
   <script>
-            function iniciarAutoScroll(container, elemento) {
-      if (!container || !elemento) return;
-      if (window.__scrollTimer) clearInterval(window.__scrollTimer);
-      if (window.__scrollTimeout) clearTimeout(window.__scrollTimeout);
+    function iniciarAutoScroll(container) {
+      if (!container) return;
+      if (window.__scrollInterval) clearInterval(window.__scrollInterval);
+      if (window.__scrollTimer) clearTimeout(window.__scrollTimer);
 
       container.scrollTop = 0;
 
-      window.__scrollTimeout = setTimeout(() => {
-        const alturaDisponivel = container.clientHeight;
-        const alturaTotal = container.scrollHeight;
-        const maxScroll = alturaTotal - alturaDisponivel;
-
-        if (maxScroll > 15) {
+      window.__scrollTimer = setTimeout(() => {
+        const diferenca = container.scrollHeight - container.clientHeight;
+        if (diferenca > 15) {
           let descendo = true;
           let pausado = false;
 
-          window.__scrollTimer = setInterval(() => {
+          window.__scrollInterval = setInterval(() => {
             if (pausado) return;
 
             if (descendo) {
               container.scrollTop += 1;
-              if (container.scrollTop >= maxScroll) {
+              if (container.scrollTop >= diferenca) {
                 pausado = true;
                 setTimeout(() => {
                   descendo = false;
                   pausado = false;
-                }, 3000); // Pausa 3s no fim da leitura
+                }, 3000); // Pausa 3s no final do texto
               }
             } else {
-              container.scrollTop -= 3; // Retorno suave ao topo
+              container.scrollTop -= 3;
               if (container.scrollTop <= 0) {
                 container.scrollTop = 0;
                 descendo = true;
                 pausado = true;
                 setTimeout(() => {
                   pausado = false;
-                }, 3500); // Pausa 3.5s no topo antes de descer novamente
+                }, 3500); // Pausa 3.5s no inicio antes de voltar a descer
               }
             }
           }, 35);
         }
-      }, 2000);
-    } else {
-              // Retorna suave ao topo
-              posAtual -= 4;
-              if (posAtual <= 0) {
-                posAtual = 0;
-                elemento.style.transform = 'translateY(0px)';
-                descendo = true;
-                pausado = true;
-                setTimeout(() => { pausado = false; }, 3000);
-              } else {
-                elemento.style.transform = 	ranslateY(- + posAtual + px);
-              }
-            }
-          }, 40);
-        }
-      }, 500);
+      }, 2500);
     }
 
     document.addEventListener('DOMContentLoaded', async () => {
-      const timestamp = Date.now();
-      const containerElem = document.getElementById('caption-container') || document.querySelector('.caption-container');
-      const captionElem = document.getElementById('caption-text') || document.querySelector('.caption-text');
+      const containerElem = document.getElementById('caption-container');
+      const captionElem = document.getElementById('caption-text');
       const player = document.getElementById('player');
       const videoSource = document.getElementById('video-source');
       const imagePlayer = document.getElementById('image-player');
 
+      const timestamp = Date.now();
+      let posts = [];
+
       try {
-        const response = await fetch(`data.json?t=${timestamp}`);
-        const posts = await response.json();
-        if (!Array.isArray(posts) || posts.length === 0) return;
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const postParam = urlParams.get('post');
-        const postIdx = parseInt(postParam, 10);
-
-        let currentPost = posts[0];
-        if (!isNaN(postIdx)) {
-          currentPost = posts.find(p => p.id === postIdx || String(p.id) === String(postIdx)) || posts[postIdx - 1] || posts[0];
-        }
-
-        let texto = currentPost.caption || currentPost.text || '';
-        texto = texto.replace(/\n{3,}/g, '\n\n').trim();
-        if (captionElem) {
-          captionElem.textContent = texto;
-          if (containerElem) {
-            iniciarAutoScroll(containerElem, captionElem);
-            window.addEventListener('resize', () => iniciarAutoScroll(containerElem, captionElem));
-          }
-        }
-
-        const midiaArquivo = currentPost.media || currentPost.media_file || currentPost.video_file;
-        const isFoto = currentPost.type === 'image' || (midiaArquivo && (midiaArquivo.endsWith('.jpg') || midiaArquivo.endsWith('.png')));
-
-        if (isFoto) {
-          if (player) {
-            player.pause();
-            player.style.display = 'none';
-          }
-          if (imagePlayer) {
-            imagePlayer.style.display = 'block';
-            imagePlayer.src = `${midiaArquivo}?t=${timestamp}`;
-          }
-        } else {
-          if (imagePlayer) imagePlayer.style.display = 'none';
-          if (player && videoSource) {
-            player.style.display = 'block';
-            videoSource.src = `${midiaArquivo}?t=${timestamp}`;
-            player.load();
-            player.loop = true;
-            player.onended = () => { player.currentTime = 0; player.play().catch(() => {}); };
-            player.play().catch(e => console.log('Autoplay:', e));
-          }
-        }
+        const response = await fetch(`./data.json?t=${timestamp}`);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        posts = await response.json();
       } catch (err) {
-        console.error(err);
+        console.error("Erro ao carregar data.json:", err);
+      }
+
+      if (!Array.isArray(posts) || posts.length === 0) {
+        if (captionElem) captionElem.textContent = "Não foi possível carregar as publicações.";
+        return;
+      }
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const postParam = urlParams.get('post');
+      const postIdx = parseInt(postParam, 10);
+
+      let currentPost = posts[0];
+      if (!isNaN(postIdx)) {
+        currentPost = posts.find(p => p.id === postIdx || String(p.id) === String(postIdx)) || posts[postIdx - 1] || posts[0];
+      }
+
+      let texto = currentPost.caption || currentPost.text || '';
+      texto = texto.replace(/\n{3,}/g, '\n\n').trim();
+      if (captionElem) {
+        captionElem.textContent = texto;
+        iniciarAutoScroll(containerElem);
+      }
+
+      const midiaArquivo = currentPost.media || currentPost.media_file || currentPost.video_file;
+      const isFoto = currentPost.type === 'image' || (midiaArquivo && (midiaArquivo.endsWith('.jpg') || midiaArquivo.endsWith('.png')));
+
+      if (isFoto) {
+        if (player) {
+          player.pause();
+          player.style.display = 'none';
+        }
+        if (imagePlayer) {
+          imagePlayer.style.display = 'block';
+          imagePlayer.src = `./${midiaArquivo}?t=${timestamp}`;
+        }
+      } else {
+        if (imagePlayer) imagePlayer.style.display = 'none';
+        if (player && videoSource) {
+          player.style.display = 'block';
+          player.loop = true;
+          
+          player.onended = () => {
+            player.currentTime = 0;
+            player.play().catch(() => {});
+          };
+
+          videoSource.src = `./${midiaArquivo}?t=${timestamp}`;
+          player.load();
+          player.play().catch(e => console.log('Autoplay:', e));
+        }
       }
     });
   </script>
