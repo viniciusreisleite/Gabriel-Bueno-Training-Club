@@ -68,19 +68,7 @@
     }
 
     /* Coluna Informativa (Fundo Branco Clean) */
-    .info-section {
-      flex: 1;
-      height: 100%;
-      background: #ffffff;
-      border-radius: 26px;
-      box-shadow: 0 20px 45px rgba(15, 23, 42, 0.08);
-      border: 1px solid rgba(226, 232, 240, 0.9);
-      padding: 3.5vh 3vw;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      overflow: hidden;
-    }
+    
 
     /* Cabeçalho */
     .header {
@@ -131,14 +119,28 @@
     /* Área de Texto Auto-Ajustável */
     
     
-      .caption-container {
-      flex: 1;
-      overflow: hidden !important;
-      position: relative;
+      
+    
+      .info-section {
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
-      margin-top: 2rem;
+      height: 100vh !important;
+      max-height: 100vh !important;
+      overflow: hidden !important;
+      box-sizing: border-box;
+      padding-bottom: 2rem;
+    }
+    .caption-container {
+      flex: 1 1 auto !important;
+      height: 0 !important;
+      overflow-y: scroll !important;
+      scrollbar-width: none !important; /* Firefox */
+      -ms-overflow-style: none !important; /* IE/Edge */
+      margin-top: 1.5rem !important;
+      position: relative;
+    }
+    .caption-container::-webkit-scrollbar {
+      display: none !important; /* Chrome / Smart TV */
     }
     .caption-box {
       font-size: 2.3vw !important;
@@ -146,7 +148,7 @@
       font-weight: 600 !important;
       color: #222 !important;
       word-wrap: break-word;
-      transition: transform 0.1s linear;
+      padding-bottom: 4rem;
     }
   </style>
 </head>
@@ -181,43 +183,49 @@
   </div>
 
   <script>
-        function iniciarAutoScroll(container, elemento) {
+            function iniciarAutoScroll(container, elemento) {
       if (!container || !elemento) return;
-      
-      // Reseta posicao
-      elemento.style.transform = 'translateY(0px)';
-      
-      // Aguarda renderizacao do layout
-      setTimeout(() => {
+      if (window.__scrollTimer) clearInterval(window.__scrollTimer);
+      if (window.__scrollTimeout) clearTimeout(window.__scrollTimeout);
+
+      container.scrollTop = 0;
+
+      window.__scrollTimeout = setTimeout(() => {
         const alturaDisponivel = container.clientHeight;
-        const alturaTexto = elemento.scrollHeight;
-        const diferenca = alturaTexto - alturaDisponivel;
+        const alturaTotal = container.scrollHeight;
+        const maxScroll = alturaTotal - alturaDisponivel;
 
-        if (diferenca > 15) {
-          let posAtual = 0;
+        if (maxScroll > 15) {
           let descendo = true;
-          let pausado = true;
+          let pausado = false;
 
-          // Pausa inicial de 3.5s antes de rolar
-          setTimeout(() => { pausado = false; }, 3500);
-
-          if (window.__scrollInterval) clearInterval(window.__scrollInterval);
-
-          window.__scrollInterval = setInterval(() => {
+          window.__scrollTimer = setInterval(() => {
             if (pausado) return;
 
             if (descendo) {
-              posAtual += 1;
-              elemento.style.transform = 	ranslateY(- + posAtual + px);
-
-              if (posAtual >= diferenca + 20) {
+              container.scrollTop += 1;
+              if (container.scrollTop >= maxScroll) {
                 pausado = true;
                 setTimeout(() => {
                   descendo = false;
                   pausado = false;
-                }, 2000);
+                }, 3000); // Pausa 3s no fim da leitura
               }
             } else {
+              container.scrollTop -= 3; // Retorno suave ao topo
+              if (container.scrollTop <= 0) {
+                container.scrollTop = 0;
+                descendo = true;
+                pausado = true;
+                setTimeout(() => {
+                  pausado = false;
+                }, 3500); // Pausa 3.5s no topo antes de descer novamente
+              }
+            }
+          }, 35);
+        }
+      }, 2000);
+    } else {
               // Retorna suave ao topo
               posAtual -= 4;
               if (posAtual <= 0) {
