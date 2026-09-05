@@ -129,23 +129,24 @@
     }
 
     /* Área de Texto Auto-Ajustável */
-    .caption-container {
+    
+    
+      .caption-container {
       flex: 1;
-      margin-top: 2.5vh;
-      overflow: hidden;
+      overflow: hidden !important;
+      position: relative;
       display: flex;
-      align-items: center;
+      flex-direction: column;
       justify-content: flex-start;
-      width: 100%;
-      height: 100%;
+      margin-top: 2rem;
     }
     .caption-box {
-      width: 100%;
-      color: #09090b;
-      white-space: pre-line;
-      word-break: break-word;
-      line-height: 1.45;
-      font-weight: 600;
+      font-size: 2.3vw !important;
+      line-height: 1.5 !important;
+      font-weight: 600 !important;
+      color: #222 !important;
+      word-wrap: break-word;
+      transition: transform 0.1s linear;
     }
   </style>
 </head>
@@ -180,20 +181,58 @@
   </div>
 
   <script>
-    function ajustarFonteTexto(container, elemento) {
-      let fontSize = window.innerHeight * 0.024;
-      const minFontSize = window.innerHeight * 0.013;
-      elemento.style.fontSize = `${fontSize}px`;
-      elemento.style.lineHeight = '1.45';
+        function iniciarAutoScroll(container, elemento) {
+      if (!container || !elemento) return;
+      
+      // Reseta posicao
+      elemento.style.transform = 'translateY(0px)';
+      
+      // Aguarda renderizacao do layout
+      setTimeout(() => {
+        const alturaDisponivel = container.clientHeight;
+        const alturaTexto = elemento.scrollHeight;
+        const diferenca = alturaTexto - alturaDisponivel;
 
-      while (elemento.scrollHeight > container.clientHeight && fontSize > minFontSize) {
-        fontSize -= 0.5;
-        elemento.style.fontSize = `${fontSize}px`;
-      }
+        if (diferenca > 15) {
+          let posAtual = 0;
+          let descendo = true;
+          let pausado = true;
 
-      if (elemento.scrollHeight > container.clientHeight) {
-        elemento.style.lineHeight = '1.3';
-      }
+          // Pausa inicial de 3.5s antes de rolar
+          setTimeout(() => { pausado = false; }, 3500);
+
+          if (window.__scrollInterval) clearInterval(window.__scrollInterval);
+
+          window.__scrollInterval = setInterval(() => {
+            if (pausado) return;
+
+            if (descendo) {
+              posAtual += 1;
+              elemento.style.transform = 	ranslateY(- + posAtual + px);
+
+              if (posAtual >= diferenca + 20) {
+                pausado = true;
+                setTimeout(() => {
+                  descendo = false;
+                  pausado = false;
+                }, 2000);
+              }
+            } else {
+              // Retorna suave ao topo
+              posAtual -= 4;
+              if (posAtual <= 0) {
+                posAtual = 0;
+                elemento.style.transform = 'translateY(0px)';
+                descendo = true;
+                pausado = true;
+                setTimeout(() => { pausado = false; }, 3000);
+              } else {
+                elemento.style.transform = 	ranslateY(- + posAtual + px);
+              }
+            }
+          }, 40);
+        }
+      }, 500);
     }
 
     document.addEventListener('DOMContentLoaded', async () => {
@@ -223,8 +262,8 @@
         if (captionElem) {
           captionElem.textContent = texto;
           if (containerElem) {
-            ajustarFonteTexto(containerElem, captionElem);
-            window.addEventListener('resize', () => ajustarFonteTexto(containerElem, captionElem));
+            iniciarAutoScroll(containerElem, captionElem);
+            window.addEventListener('resize', () => iniciarAutoScroll(containerElem, captionElem));
           }
         }
 
