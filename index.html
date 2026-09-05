@@ -87,6 +87,26 @@
       max-width: 180px;
       object-fit: contain;
     }
+    
+    .caption-container::-webkit-scrollbar {
+      display: none !important;
+    }
+    
+      /* Motor TV Standard 2026 */
+    .header-text h1, .header h1 {
+      text-transform: uppercase !important;
+    }
+    .header-text h1 span, .header h1 span {
+      text-transform: uppercase !important;
+    }
+    .info-section {
+      height: 100vh !important;
+      max-height: 100vh !important;
+      display: flex !important;
+      flex-direction: column !important;
+      overflow: hidden !important;
+      box-sizing: border-box !important;
+    }
     .caption-container {
       flex: 1 1 auto !important;
       height: 0 !important;
@@ -107,6 +127,10 @@
       word-wrap: break-word !important;
       white-space: pre-line !important;
       padding-bottom: 6rem !important;
+    }
+    video, #image-player {
+      background: #000 !important;
+      background-color: #000 !important;
     }
   </style>
 </head>
@@ -137,7 +161,7 @@
     </div>
   </div>
 
-  <script>
+    <script>
     function iniciarAutoScroll(container) {
       if (!container) return;
       if (window.__scrollInterval) clearInterval(window.__scrollInterval);
