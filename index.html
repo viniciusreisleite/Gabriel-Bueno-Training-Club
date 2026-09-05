@@ -86,25 +86,43 @@
       object-fit: contain;
     }
     /* Area de Legenda com Scroll Oculto */
-    .caption-container {
-      flex: 1;
-      margin-top: 2rem;
-      overflow-y: scroll;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-      position: relative;
-    }
+    
     .caption-container::-webkit-scrollbar {
       display: none;
     }
+    
+      /* Motor de auto-scroll TV */
+    .info-section {
+      display: flex !important;
+      flex-direction: column !important;
+      height: 100vh !important;
+      max-height: 100vh !important;
+      overflow: hidden !important;
+      box-sizing: border-box !important;
+    }
+    .caption-container {
+      flex: 1 1 auto !important;
+      height: 0 !important;
+      overflow-y: scroll !important;
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+      position: relative !important;
+      margin-top: 1.5rem !important;
+    }
+    .caption-container::-webkit-scrollbar {
+      display: none !important;
+    }
     .caption-box {
-      font-size: 2.2vw;
-      line-height: 1.45;
-      font-weight: 600;
-      color: #222;
-      word-wrap: break-word;
-      white-space: pre-line;
-      padding-bottom: 6rem;
+      font-size: 2.2vw !important;
+      line-height: 1.45 !important;
+      font-weight: 600 !important;
+      word-wrap: break-word !important;
+      white-space: pre-line !important;
+      padding-bottom: 6rem !important;
+    }
+    video, #image-player {
+      background: #000 !important;
+      background-color: #000 !important;
     }
   </style>
 </head>
@@ -135,7 +153,7 @@
     </div>
   </div>
 
-  <script>
+    <script>
     function iniciarAutoScroll(container) {
       if (!container) return;
       if (window.__scrollInterval) clearInterval(window.__scrollInterval);
@@ -159,7 +177,7 @@
                 setTimeout(() => {
                   descendo = false;
                   pausado = false;
-                }, 3000); // Pausa 3s no final do texto
+                }, 3000); // 3s no fim da leitura
               }
             } else {
               container.scrollTop -= 3;
@@ -169,7 +187,7 @@
                 pausado = true;
                 setTimeout(() => {
                   pausado = false;
-                }, 3500); // Pausa 3.5s no inicio antes de voltar a descer
+                }, 3500); // 3.5s no topo antes de novo ciclo
               }
             }
           }, 35);
@@ -188,15 +206,15 @@
       let posts = [];
 
       try {
-        const response = await fetch(`./data.json?t=${timestamp}`);
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const response = await fetch(./data.json?t= + timestamp);
+        if (!response.ok) throw new Error(HTTP  + response.status);
         posts = await response.json();
       } catch (err) {
         console.error("Erro ao carregar data.json:", err);
       }
 
       if (!Array.isArray(posts) || posts.length === 0) {
-        if (captionElem) captionElem.textContent = "Não foi possível carregar as publicações.";
+        if (captionElem) captionElem.textContent = "Não foi possível carregar as informações.";
         return;
       }
 
@@ -226,20 +244,21 @@
         }
         if (imagePlayer) {
           imagePlayer.style.display = 'block';
-          imagePlayer.src = `./${midiaArquivo}?t=${timestamp}`;
+          imagePlayer.src = ./ + midiaArquivo + ?t= + timestamp;
         }
       } else {
         if (imagePlayer) imagePlayer.style.display = 'none';
         if (player && videoSource) {
           player.style.display = 'block';
+          player.style.backgroundColor = '#000';
           player.loop = true;
-          
+
           player.onended = () => {
             player.currentTime = 0;
             player.play().catch(() => {});
           };
 
-          videoSource.src = `./${midiaArquivo}?t=${timestamp}`;
+          videoSource.src = ./ + midiaArquivo + ?t= + timestamp;
           player.load();
           player.play().catch(e => console.log('Autoplay:', e));
         }
