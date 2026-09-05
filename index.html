@@ -246,6 +246,8 @@
             player.style.display = 'block';
             videoSource.src = `${midiaArquivo}?t=${timestamp}`;
             player.load();
+            player.loop = true;
+            player.onended = () => { player.currentTime = 0; player.play().catch(() => {}); };
             player.play().catch(e => console.log('Autoplay:', e));
           }
         }
