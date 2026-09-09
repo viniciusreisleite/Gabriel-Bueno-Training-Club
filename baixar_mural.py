@@ -9,8 +9,7 @@ import yt_dlp
 from playwright.sync_api import sync_playwright
 
 PERFIS = [
-    {"username": "studiofit.gb", "badge": "LOJA SOMZÃO", "color": "#ff1744"},
-    {"username": "estetica_somzao", "badge": "ESTÉTICA AUTOMOTIVA", "color": "#00e5ff"}
+    {"username": "studiofit.gb", "badge": "LOJA SOMZÃO", "color": "#ff1744"}
 ]
 TARGET_POR_PERFIL = 6
 
