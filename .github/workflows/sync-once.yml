@@ -1,10 +1,7 @@
 name: One-shot mural update - Gabriel-Bueno-Training-Club
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - ".github/workflows/sync-once.yml"
+  workflow_dispatch:
 
 permissions:
   contents: write
