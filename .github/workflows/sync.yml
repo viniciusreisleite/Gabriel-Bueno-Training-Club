@@ -11,6 +11,9 @@ permissions:
 jobs:
   sync:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Baixar repositório
@@ -59,4 +62,5 @@ jobs:
           path: '.'
 
       - name: Publicar Painel na Web
+        id: deployment
         uses: actions/deploy-pages@v4
